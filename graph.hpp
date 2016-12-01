@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <vector>
 #include <algorithm>
 
@@ -22,10 +23,10 @@ public:
 
 	unsigned int degree();
 
-	inline bool operator< (const Vertex &v1, const Vertex &v2){ return v1.degree() < v2.degree(); }
-	inline bool operator> (const Vertex &v1, const Vertex &v2){ return v2 < v1; }
-	inline bool operator<=(const Vertex &v1, const Vertex &v2){ return !(v1 > v2); }
-	inline bool operator>=(const Vertex &v1, const Vertex &v2){ return !(v1 < v2); }
+	friend bool operator< (Vertex &v1, Vertex &v2){ return v1.degree() < v2.degree(); }
+	friend bool operator> (Vertex &v1, Vertex &v2){ return v2 < v1; }
+	friend bool operator<=(Vertex &v1, Vertex &v2){ return !(v1 > v2); }
+	friend bool operator>=(Vertex &v1, Vertex &v2){ return !(v1 < v2); }
 
 private:
 	unsigned int colour;
@@ -40,13 +41,13 @@ private:
 
 class Graph{
 public:
-	Graph(fstream inputFile);
+	Graph(std::string inputFile);
 
 	void createEdge(unsigned int source, unsigned int target);
 	void deleteEdge(unsigned int source, unsigned int target);
 
 	unsigned int size();
-	Vertex vertex(unsigned int vertexId);
+	Vertex vertex(unsigned int vertexId); // returns specified vertex
 
 	void sort();
 	void reverse();

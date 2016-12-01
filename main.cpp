@@ -19,9 +19,17 @@
 ******************************/
 
 #include "graph.hpp"
-#include "graph_handler.hpp"
+#include "graphHandler.hpp"
+
+using namespace std;
 
 int main(){
+
+	Graph g("graph_files/test.col");
+
+	for(int i = 1; i < g.size(); i++){
+		cout << g.vertex(i).degree() << endl;
+	}
 
 	return 0;
 }
