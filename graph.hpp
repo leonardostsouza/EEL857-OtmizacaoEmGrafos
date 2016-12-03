@@ -11,6 +11,9 @@ class Vertex{
 public:
 	Vertex();
 
+	void setIndex(unsigned int i);
+	unsigned int getIndex();
+
 	void setColour(unsigned int newColour);
 	unsigned int getColour();
 
@@ -29,6 +32,7 @@ public:
 	friend bool operator>=(Vertex &v1, Vertex &v2){ return !(v1 < v2); }
 
 private:
+	unsigned int index;
 	unsigned int colour;
 	unsigned int mark;
 	std::vector<unsigned int> neighbors; 
@@ -42,17 +46,20 @@ private:
 class Graph{
 public:
 	Graph(std::string inputFile);
-
-	void createEdge(unsigned int source, unsigned int target);
-	void deleteEdge(unsigned int source, unsigned int target);
+	Graph();
 
 	unsigned int size();
-	Vertex vertex(unsigned int vertexId); // returns specified vertex
+	Vertex * vertex(unsigned int vertexId); // returns specified vertex
+	Vertex * at(unsigned int position);
 
 	void sort();
 	void reverse();
 
 private:
+	void createEdge(unsigned int source, unsigned int target);
+	void deleteEdge(unsigned int source, unsigned int target);
+	
+	bool sortingDone;
 	std::vector<Vertex> myGraph;
 };
 
