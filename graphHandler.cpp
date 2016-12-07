@@ -7,7 +7,7 @@ GraphHandler::GraphHandler(Graph* inputGraph){
 
 
 // colorir grafo usando heuristica
-void GraphHandler::h_colour(){
+unsigned int GraphHandler::h_colour(){
 
 	std::vector<unsigned int> colour; // 0 se a cor não é usada e 1 se a cor é usada nas adjacencias
 	colour.push_back(0); // inicializar com 1 cor
@@ -52,7 +52,8 @@ void GraphHandler::h_colour(){
 	}
 
 	storeSolution();
-	std::cout << "Cores usadas:" << colour.size() << std::endl;
+
+	return colour.size();
 }
 
 
@@ -66,7 +67,7 @@ void GraphHandler::bt_colour(unsigned int vertexIndex, unsigned int usedColours,
 	if(vertexIndex < G->size()){
 		// obtem limite superior
 		if (!(*upperLimit > 0)){
-			*upperLimit = 10;
+			*upperLimit = this->h_colour();
 		}
 		G->at(vertexIndex)->setColour(0); // inicializar cor do vértice
 

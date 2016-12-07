@@ -9,8 +9,8 @@ class GraphHandler{
 public:
 	GraphHandler(Graph* inputGraph);
 
-	void h_colour(); // colorir grafo usando heuristica
-	void bb_colour(); // colorir grafo usando branch-and-bound
+	unsigned int h_colour(); // colorir grafo usando heuristica. Retorna o número de cores usadas
+	void bb_colour(); // colorir grafo usando branch-and-bound *** NÃO IMPLEMENTADO ***
 	void bt_colour(unsigned int vertexIndex, unsigned int usedColours, unsigned int * upperLimit); // colorir grafo usando backtrack
 
 	Graph getSolution();
