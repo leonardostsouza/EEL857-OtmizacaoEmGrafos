@@ -1,4 +1,4 @@
-CC=g++
+CC=g++-5
 
 MAIN_FILE=main.cpp
 GRAPH_LIB=graph.cpp
