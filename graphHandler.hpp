@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <ctime>
 #include "graph.hpp"
 
 #ifndef __GRAPH_HANDLER_H__
@@ -20,6 +21,8 @@ private:
 	Graph * G;
 	Graph Solution;
 	unsigned int qttColours;
+	time_t startingTime;
+	time_t timeLimit;
 	bool promissing(unsigned int vertex, unsigned int colour);
 	void storeSolution();
 };

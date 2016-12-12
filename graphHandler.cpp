@@ -3,6 +3,8 @@
 GraphHandler::GraphHandler(Graph* inputGraph){
 	this->G = inputGraph;
 	qttColours = 0;
+	startingTime = 0;
+	timeLimit = 30*60; // limite de 30 min
 }
 
 
@@ -50,8 +52,8 @@ unsigned int GraphHandler::h_colour(){
 			colour[w] = 0;
 		}
 	}
-
-	storeSolution();
+	qttColours = colour.size();
+	//storeSolution();
 
 	return colour.size();
 }
@@ -64,52 +66,59 @@ void GraphHandler::bb_colour(){
 
 
 void GraphHandler::bt_colour(unsigned int vertexIndex, unsigned int usedColours, unsigned int * upperLimit){
-	if(vertexIndex < G->size()){
-		// obtem limite superior
-		if (!(*upperLimit > 0)){
-			*upperLimit = this->h_colour();
-		}
-		G->at(vertexIndex)->setColour(0); // inicializar cor do vértice
+	if(this->startingTime == 0){
+		startingTime = time(0);
+	}
 
-		// tentar colorir
-		for (unsigned int i = 1; i < usedColours+1; i++){ 	// para cada cor que vi pode assumir
-			if (i < *upperLimit){
-				if (promissing(vertexIndex, i)){ // se promissor
+	time_t now = time(0);
+	if((now - startingTime) < this->timeLimit){
+		if(vertexIndex < G->size()){
+			// obtem limite superior
+			if (!(*upperLimit > 0)){
+				*upperLimit = this->h_colour();
+			}
+			G->at(vertexIndex)->setColour(0); // inicializar cor do vértice
 
-					G->at(vertexIndex)->setColour(i);
+			// tentar colorir
+			for (unsigned int i = 1; i < usedColours+1; i++){ 	// para cada cor que vi pode assumir
+				if (i < *upperLimit){
+					if (promissing(vertexIndex, i)){ // se promissor
+
+						G->at(vertexIndex)->setColour(i);
 
 
-					if (vertexIndex >= G->size() - 1){ // se existe solução
+						if (vertexIndex >= G->size() - 1){ // se existe solução
+							qttColours = usedColours;
+							storeSolution();
+							*upperLimit = usedColours;
+						}
+						else{
+							bt_colour(vertexIndex + 1, usedColours, upperLimit);
+						}
+					}
+				}
+			}
+
+			if(G->at(vertexIndex)->getColour() == 0){						// Se após tentar todas as cores já usadas, ainda não existir solução
+				if(usedColours < *upperLimit){ 								// se ainda for possível usar mais uma cor
+					usedColours++;											// criar nova cor
+					G->at(vertexIndex)->setColour(usedColours);				// atribuir nova cor ao vértice
+
+
+					if (vertexIndex >= G->size() - 1){ 						// se existe solução
 						qttColours = usedColours;
 						storeSolution();
-						*upperLimit = usedColours - 1;
+						*upperLimit = usedColours;
+						std::cout << "+++++++++>> upper limit = " << *upperLimit << std::endl;
 					}
 					else{
-						bt_colour(vertexIndex + 1, usedColours, upperLimit);
+						bt_colour(vertexIndex + 1, usedColours, upperLimit);	// continuar procurando solução
 					}
+					
 				}
 			}
+			G->at(vertexIndex)->setColour(0);
 		}
-
-		if(G->at(vertexIndex)->getColour() == 0){						// Se após tentar todas as cores já usadas, ainda não existir solução
-			if(usedColours < *upperLimit){ 								// se ainda for possível usar mais uma cor
-				usedColours++;											// criar nova cor
-				G->at(vertexIndex)->setColour(usedColours);				// atribuir nova cor ao vértice
-
-
-				if (vertexIndex >= G->size() - 1){ 						// se existe solução
-					qttColours = usedColours;
-					storeSolution();
-					*upperLimit = usedColours - 1;
-					std::cout << "+++++++++>> upper limit = " << *upperLimit << std::endl;
-				}
-				else{
-					bt_colour(vertexIndex + 1, usedColours, upperLimit);	// continuar procurando solução
-				}
-				
-			}
-		}
-		G->at(vertexIndex)->setColour(0);
 	}
 } 
 
